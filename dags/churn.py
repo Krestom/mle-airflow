@@ -3,17 +3,20 @@ import pandas as pd
 import numpy as np
 from airflow.decorators import dag, task
 from airflow.providers.postgres.hooks.postgres import PostgresHook
+from steps.messages import send_telegram_success_message, send_telegram_failure_message
 
 @dag(
     schedule='@once',
     start_date=pendulum.datetime(2023, 1, 1, tz="UTC"),
     catchup=False,
-    tags=["ETL"]
+    tags=["ETL"],
+    on_success_callback=send_telegram_success_message,
+    on_failure_callback=send_telegram_failure_message
 )
 def prepare_churn_dataset():
     @task()
     def create_table():
-        from sqlalchemy import MetaData, Table, Column, String, Integer, Float, DateTime, UniqueConstraint, create_engine, inspect
+        from sqlalchemy import MetaData, Table, Column, String, Integer, Float, DateTime, UniqueConstraint, inspect
         # Определение метаданных
         metadata = MetaData()
         # Создание таблицы users_churn
