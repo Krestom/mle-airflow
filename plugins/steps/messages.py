@@ -1,10 +1,16 @@
 from airflow.providers.telegram.hooks.telegram import TelegramHook # импортируем хук телеграма
+import os
+
+
+access_token = os.getenv("TELEGRAM_API")
+chat_id = os.getenv("TELEGRAM_CHAT_ID")
+
 
 def send_telegram_success_message(context): # на вход принимаем словарь со контекстными переменными
     hook = TelegramHook(
                     telegram_conn_id='test',
-                    token='7855058060:AAHhZ1vNkJptndeGnh__4z9baD1r0f_-wqc',
-                    chat_id='-4587604005'
+                    token=access_token,
+                    chat_id=chat_id
                     )
     
     dag_id = context['dag'].dag_id
@@ -14,7 +20,7 @@ def send_telegram_success_message(context): # на вход принимаем �
     
     # Отправляем сообщение в указанный чат
     hook.send_message(
-        {'chat_id': '-4587604005',  # Укажите ваш chat_id
+        {'chat_id': chat_id,  # Укажите ваш chat_id
         'text': message}
     )
 
@@ -22,8 +28,8 @@ def send_telegram_success_message(context): # на вход принимаем �
 def send_telegram_failure_message(context):
     hook = TelegramHook(
         telegram_conn_id='test',
-        token='7855058060:AAHhZ1vNkJptndeGnh__4z9baD1r0f_-wqc',
-        chat_id='-4587604005'
+        token=access_token,
+        chat_id=chat_id
     )
 
     dag_id = context['dag'].dag_id
@@ -37,6 +43,6 @@ def send_telegram_failure_message(context):
     
     # Отправляем сообщение в указанный чат
     hook.send_message(
-        {'chat_id': '-4587604005',  # Укажите ваш chat_id
+        {'chat_id': chat_id,  # Укажите ваш chat_id
         'text': message}
     )
