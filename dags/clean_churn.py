@@ -109,10 +109,6 @@ def clean_churn_dataset():
         outliers = potential_outliers.any(axis=1)
 
         data = data[~outliers].reset_index(drop=True)
-
-        data['target'] = (data['end_date'] != 'No').astype(int)
-        print('Финальный результат')
-        print(data.info())
         return data
 
     @task()
